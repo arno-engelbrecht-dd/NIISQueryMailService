@@ -300,7 +300,7 @@ namespace NIISQueryMailService
                         }
 
                         db.ExecuteSQL_NoClose("INSERT INTO QueryMails (MailID, CreateDate, FromMail, Status, Email, Subject, MailContents) VALUES (@1,@2,@3,@4,@3,@5,@6)",
-                                                new object[] { msgId, DateTime.Now, fromAddress, "Pending", subject, txt });
+                                                new object[] { msgId, DateTime.Now, fromAddress, "Pending", subject ?? string.Empty, txt });
 
                         var attachments = msg.BodyParts.OfType<MimePart>().Where(part => !string.IsNullOrEmpty(part.FileName)).ToList();
                         if ((attachments == null) || (attachments.Count == 0))
