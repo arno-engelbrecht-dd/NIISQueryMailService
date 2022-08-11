@@ -19,6 +19,14 @@ using System.Threading.Tasks;
 
 namespace NIISQueryMailService
 {
+    public static class StringExtensions
+    {
+        public static string MakeValidFilename(this string filename)
+        {
+            return string.Join("_", filename.Split(System.IO.Path.GetInvalidFileNameChars()));
+        }
+    }
+
     public partial class NIISQueryMailService : ServiceBase
     {
         private static readonly ILog _log = LogManager.GetLogger(typeof(NIISQueryMailService));
@@ -345,7 +353,7 @@ namespace NIISQueryMailService
                             {
                                 var mp = ((MimePart)att);
                                 var fileName = Path.GetFileName(mp.FileName);
-                                var completedFileName = DateTime.Now.ToFileTime() + "_" + fileName;
+                                var completedFileName = (DateTime.Now.ToFileTime() + "_" + fileName).MakeValidFilename();
                                 using (var stream = File.Create(Path.Combine(subPath, completedFileName)))
                                 {
                                     mp.Content.DecodeTo(stream);
